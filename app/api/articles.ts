@@ -280,3 +280,9 @@ export const getLatestWolfQuote = cache(async (): Promise<Article | null> => {
     return null;
   }
 });
+
+// any の代わりに型を指定
+type SwipeRef = {
+  isBeginning: boolean;
+  isEnd: boolean;
+};

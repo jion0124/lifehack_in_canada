@@ -12,13 +12,14 @@ import { CarouselArrow } from './CarouselArrow';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { convertCategory, Article } from '../api/articles';
 import { format } from 'date-fns'; // 追加
+import { Swiper as SwiperType } from 'swiper';
 
 interface ArticleCarouselProps {
   articles: Article[];
 }
 
 export default function ArticleCarousel({ articles }: ArticleCarouselProps) {
-  const swiperRef = useRef<any>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [mounted, setMounted] = useState(false); // 追加

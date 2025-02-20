@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import { GoogleAnalytics } from './components/GoogleAnalytics';
 
 // Tailwind で拡張するならフォントなどをこう読み込む例
 const inter = Inter({ subsets: ['latin'] });
@@ -20,6 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
+      <head>
+        <GoogleAnalytics />
+      </head>
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-100">
           <div className="mx-auto max-w-[430px]  overflow-hidden bg-yellow-grid min-h-screen shadow-lg ">

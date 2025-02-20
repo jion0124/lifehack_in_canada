@@ -51,26 +51,26 @@ export default function TopWasabi() {
     setMounted(true);
   }, []);
 
-  const handleDateChange: CalendarProps['onChange'] = (value) => {
-    if (!value) return;
+  // const handleDateChange: CalendarProps['onChange'] = (value) => {
+  //   if (!value) return;
     
-    // 型ガードを厳密化
-    const processDate = (rawDate: Date | null): Date => {
-      if (!rawDate) return new Date();
-      return toZonedTime(rawDate, TIME_ZONE);
-    };
+  //   // 型ガードを厳密化
+  //   const processDate = (rawDate: Date | null): Date => {
+  //     if (!rawDate) return new Date();
+  //     return toZonedTime(rawDate, TIME_ZONE);
+  //   };
 
-    if (Array.isArray(value)) {
-      setSelectedDate(processDate(value[0] as Date));
-    } else {
-      setSelectedDate(processDate(value as Date));
-    }
-  };
+  //   if (Array.isArray(value)) {
+  //     setSelectedDate(processDate(value[0] as Date));
+  //   } else {
+  //     setSelectedDate(processDate(value as Date));
+  //   }
+  // };
 
-  const safeFormat = (date: Date | null, formatStr: string): string => {
-    if (!date) return '';
-    return format(date, formatStr, { locale: enUS });
-  };
+  // const safeFormat = (date: Date | null, formatStr: string): string => {
+  //   if (!date) return '';
+  //   return format(date, formatStr, { locale: enUS });
+  // };
 
   if (!mounted) return null;
 
@@ -84,21 +84,15 @@ export default function TopWasabi() {
           color="text-yellow-300"
         />
 
-         <p className="text-base text-center mt-7">
-          カナダ生活辞典は
-          <br />
-          日本人留学生の交流の場を作るために
-          <br />
-          コミュニティ「WASABI」を運営しています。
-          <br />
-          <br />
-          言語交換会、パスタ、BBQ、ゲーム大会など
-          <br />
-          どなたでも気軽に国際交流ができます。
-          <br />
-          1人でも参加しやすいコミュニティ作りを
-          <br />
-          心がけています。
+         <p className="text-base text-center mt-7 px-9">
+         カナダ生活事典は<br />
+        人生のボーナスステージとしての留学を一層刺激的にするためにコミュニティ「WASABI」を運営しています。
+        <br />
+        <br />
+        言語交換イベント、バスケ、BBQ、合同誕生会などを中心に活動しています。
+        <br />
+        <br />
+        一匹狼で海外に来た皆さまが、おひとりでも参加しやすいコミュニティー作りを心がけています。
         </p>
 
         <div className="

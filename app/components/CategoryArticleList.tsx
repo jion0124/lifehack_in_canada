@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Article, getArticlesByCategory, SortOrder, EnglishCategory,JapaneseCategory, convertCategory } from '../api/articles';
+import { Article, getArticlesByCategory, SortOrder, EnglishCategory,JapaneseCategory } from '../api/articles';
 import { ArticleCard } from './ArticleCard';
 import SectionTitle from './SectionTitle';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import Wasabi from './Wasabi';
 import Link from 'next/link';
-import { CATEGORY_MAPPING } from '../api/articles';
 
 interface CategoryArticleListProps {
   jaCategoryName: JapaneseCategory;
@@ -16,11 +15,6 @@ interface CategoryArticleListProps {
 
 export function CategoryArticleList({ jaCategoryName, enCategoryName }: CategoryArticleListProps) {
   
-  
-  // if (!englishCategory) {
-  //   throw new Error(`Invalid category: ${category}`);
-  // }
-
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [articles, setArticles] = useState<Article[]>([]);
   const [currentPage, setCurrentPage] = useState(1);

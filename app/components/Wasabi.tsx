@@ -10,21 +10,15 @@ export default function Wasabi() {
         <SectionTitle enTitle="COMMUNITY" jaTitle="コミュニティ" subTitle="「WASABI」" color='text-yellow-300'/>
 
         {/* 説明文 */}
-        <p className="text-base text-center mt-7">
-          カナダ生活辞典は
-          <br />
-          日本人留学生の交流の場を作るために
-          <br />
-          コミュニティ「WASABI」を運営しています。
-          <br />
-          <br />
-          言語交換会、パスタ、BBQ、ゲーム大会など
-          <br />
-          どなたでも気軽に国際交流ができます。
-          <br />
-          1人でも参加しやすいコミュニティ作りを
-          <br />
-          心がけています。
+        <p className="text-base text-center mt-7 px-9">
+         カナダ生活事典は<br />
+        人生のボーナスステージとしての留学を一層刺激的にするためにコミュニティ「WASABI」を運営しています。
+        <br />
+        <br />
+        言語交換イベント、バスケ、BBQ、合同誕生会などを中心に活動しています。
+        <br />
+        <br />
+        一匹狼で海外に来た皆さまが、おひとりでも参加しやすいコミュニティー作りを心がけています。
         </p>
 
         {/* イメージ一覧（横並び） */}
