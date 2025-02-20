@@ -21,10 +21,12 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
     setSelectedCategory(category);
   };
 
-  const filteredArticles = articles.filter(article => {
-    const categoryEn = CATEGORY_MAPPING[article.category as keyof typeof CATEGORY_MAPPING];
-    return categoryEn === selectedCategory;
-  });
+  const filteredArticles = articles
+    .filter(article => {
+      const categoryEn = CATEGORY_MAPPING[article.category as keyof typeof CATEGORY_MAPPING];
+      return categoryEn === selectedCategory;
+    })
+    .slice(0, 5); // 最大5件に制限
 
   // もっと見るボタンの情報を生成
   const getMoreButtonInfo = () => {    
