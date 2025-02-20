@@ -285,7 +285,7 @@ export default function ArticlePage({ article }: ArticlePageProps) {
           <WriterCard writer={article.writer[0]} />
       )}
      
-      <ShareButtons url={`${process.env.NEXT_PUBLIC_SITE_URL}/categories/${convertCategory.toEn(article.category)}/${article.id}`} title={article.title} />
+      <ShareButtons url={`https://ca-seikatsu.com/categories/${convertCategory.toEn(article.category)}/${article.id}`} title={article.title} />
 
       <RelatedArticlesCard currentArticleId={article.id} category={article.category} />
      <LatestArticlesCard />
