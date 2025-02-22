@@ -85,7 +85,7 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
                 border
                 ${
                   isActive
-                    ? 'bg-gray-900 text-white border-gray-600'
+                    ? 'bg-black text-white border-gray-600'
                     : 'bg-white text-gray-800 border-gray-800 shadow-[1px_2px_0px_0px_rgba(0,0,0,1)] '
                 }
               `}
