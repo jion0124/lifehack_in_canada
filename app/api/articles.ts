@@ -14,7 +14,7 @@ export const CATEGORY_MAPPING = {
   '買い物': 'shopping',
   // '交通': 'transport',
   // '医療': 'healthcare',
-  // '文化歴史': 'culture',
+  // '文化歴史': 'culture',  
   'マネー': 'finance',
   // '英語学習': 'english',
   '留学哲学': 'mindset',
