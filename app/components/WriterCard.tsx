@@ -107,32 +107,34 @@ export default function WriterCard({ writer }: { writer: Writer }) {
         dangerouslySetInnerHTML={{ __html: writer.intro || '' }}
       />
 
-      {/* ライターの他の記事へリンク （例）*/}
-      <div className="mt-5 text-center">
-      <Link
-        href={`/character/writer/${writer.id}`}
-        className="
-          inline-flex
-          items-center
-          gap-2
-          px-10
-          py-1 
-          border 
-          border-black 
-          rounded-full 
-          text-sm
-          text-gray-800 
-          bg-white 
-          shadow-[1px_2px_0px_0px_rgba(0,0,0,1)] 
-          hover:translate-x-[1px] 
-          hover:translate-y-[1px] 
-          hover:shadow-none 
-          transition-all"
-      >
-        <PixelArrow />
-        このライターの記事をみる
-      </Link>
-    </div>
+      {/* ライターの他の記事へリンク - buttonがtrueの場合のみ表示 */}
+      {writer.button && (
+        <div className="mt-5 text-center">
+          <Link
+            href={`/character/writer/${writer.id}`}
+            className="
+              inline-flex
+              items-center
+              gap-2
+              px-10
+              py-1 
+              border 
+              border-black 
+              rounded-full 
+              text-sm
+              text-gray-800 
+              bg-white 
+              shadow-[1px_2px_0px_0px_rgba(0,0,0,1)] 
+              hover:translate-x-[1px] 
+              hover:translate-y-[1px] 
+              hover:shadow-none 
+              transition-all"
+          >
+            <PixelArrow />
+            このライターの記事をみる
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

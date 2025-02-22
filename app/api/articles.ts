@@ -80,6 +80,7 @@ export type Writer = {
   intro: string;
   tag: string[];
   ratings: Rating[];
+  button: boolean;
 };
 
 export type Character = {
@@ -98,6 +99,7 @@ export type Character = {
   intro: string;
   tag: string[];
   ratings: Rating[];
+  button: boolean;
 };
 
 export type Article = {
@@ -237,7 +239,7 @@ export const getRelatedArticles = cache(async (
 
 export const getAllCharacter = cache(async () => {
   const data = await fetchWithCache('character', {
-    fields: 'id,name,history,createdAt,image,intro,tag,ratings', // 必要なフィールドを指定
+    fields: 'id,name,history,createdAt,image,intro,tag,ratings,button', // 必要なフィールドを指定
     limit: 100, // 必要に応じて件数調整
     orders: 'createdAt' // 作成日の降順など、適切な並び順を指定
   });
