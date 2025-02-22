@@ -80,7 +80,7 @@ export default function Wasabi() {
   if (!mounted) return null;
 
   return (
-    <section className="w-full mx-auto bg-[#039877]  mt-12 py-12">
+    <section className="bg-[#039877] py-12 -mx-3">
       <div className="text-white">
         <SectionTitle
           enTitle="COMMUNITY"
