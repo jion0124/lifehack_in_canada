@@ -274,6 +274,9 @@ export default function ArticlePage({ article }: ArticlePageProps) {
 
       {instaPost && (
         <>
+          <div className='text-center mb-2 text-sm'>
+            この記事はInstagramにも掲載されてるよ！
+          </div>
           <InstagramEmbed url={instaPost} />
           <div className="h-20"></div>
         </>
@@ -282,7 +285,12 @@ export default function ArticlePage({ article }: ArticlePageProps) {
       {/* ライター情報 */}
       {/* 本当は常に表示させておくけど、応急措置 */}
       {writer && (
+        <>
+          <div className='text-center mb-2 text-sm'>
+            この記事を書いた人
+          </div>
           <WriterCard writer={article.writer[0]} />
+        </>
       )}
      
       <ShareButtons url={`https://ca-seikatsu.com/categories/${convertCategory.toEn(article.category)}/${article.id}`} title={article.title} />

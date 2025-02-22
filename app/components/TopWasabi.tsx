@@ -9,6 +9,11 @@ import Image from 'next/image';
 import SectionTitle from './SectionTitle';
 import { format, toZonedTime } from 'date-fns-tz';
 import { enUS } from 'date-fns/locale';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const TIME_ZONE = 'America/Vancouver';
 
@@ -95,48 +100,62 @@ export default function TopWasabi() {
         一匹狼で海外に来た皆さまが、おひとりでも参加しやすいコミュニティー作りを心がけています。
         </p>
 
-        <div className="
-          flex 
-          gap-4 
-          mt-6 
-          overflow-x-auto 
-          pb-4
-          [-ms-overflow-style:none]
-          [scrollbar-width:none]
-          [&::-webkit-scrollbar]:hidden
-        ">
-          <div className="relative min-w-[200px] h-[120px] flex-shrink-0">
-            <Image
-              src="/images/Wasabi1.png"
-              alt="WASABI Image 1"
-              fill
-              className="object-cover border-2 border-gray-800 rounded-sm"
-            />
-          </div>
-          <div className="relative min-w-[200px] h-[120px] flex-shrink-0">
-            <Image
-              src="/images/Wasabi2.png"
-              alt="WASABI Image 2"
-              fill
-              className="object-cover border-2 border-gray-800 rounded-sm"
-            />
-          </div>
-          <div className="relative min-w-[200px] h-[120px] flex-shrink-0">
-            <Image
-              src="/images/Wasabi3.png"
-              alt="WASABI Image 3"
-              fill
-              className="object-cover border-2 border-gray-800 rounded-sm"
-            />
-          </div>
-          <div className="relative min-w-[200px] h-[120px] flex-shrink-0">
-            <Image
-              src="/images/Wasabi4.png"
-              alt="WASABI Image 4"
-              fill
-              className="object-cover border-2 border-gray-800 rounded-sm"
-            />
-          </div>
+        <div className="mt-6">
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={1}
+            slidesPerView={1.8}
+            centeredSlides={true}
+            loop={true}
+            autoplay={{
+              delay: 2000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true
+            }}
+            pagination={{ clickable: true }}
+            className="w-full !pb-8"
+          >
+            <SwiperSlide>
+              <div className="relative w-[200px] h-[120px] mx-auto">
+                <Image
+                  src="/images/Wasabi1.png"
+                  alt="WASABI Image 1"
+                  fill
+                  className="object-cover border-2 border-gray-800 rounded-sm"
+                />
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="relative w-[200px] h-[120px] mx-auto">
+                <Image
+                  src="/images/Wasabi2.png"
+                  alt="WASABI Image 2"
+                  fill
+                  className="object-cover border-2 border-gray-800 rounded-sm"
+                />
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="relative w-[200px] h-[120px] mx-auto">
+                <Image
+                  src="/images/Wasabi3.png"
+                  alt="WASABI Image 3"
+                  fill
+                  className="object-cover border-2 border-gray-800 rounded-sm"
+                />
+              </div>
+            </SwiperSlide>
+            <SwiperSlide>
+              <div className="relative w-[200px] h-[120px] mx-auto">
+                <Image
+                  src="/images/Wasabi4.png"
+                  alt="WASABI Image 4"
+                  fill
+                  className="object-cover border-2 border-gray-800 rounded-sm"
+                />
+              </div>
+            </SwiperSlide>
+          </Swiper>
         </div>
 
         {/* <div className="mt-6 flex flex-col items-center text-gray-800">

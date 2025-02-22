@@ -27,7 +27,7 @@ export default function Footer() {
 
         {/* Instagram案内 */}
         <div className="mt-10">
-          <p className="text-base mb-4">＼ Instagramもフォローしてね ／</p>
+          <p className="text-base mb-4">＼ 各SNSもフォローしてね ／</p>
 
           {/* インスタアイコン（仮） */}
           <div className="flex flex-col items-center">
@@ -44,7 +44,7 @@ export default function Footer() {
 
       {/* コピーライト表記 */}
       <div className="text-center font-nosutaru text-white text-[12px] py-2 bg-[url('/images/copyright.png')]">
-        ©canada_life_dictionary2024
+      ©カナダ生活事典  / ca_seikatsu 2025
       </div>
     </footer>
   );

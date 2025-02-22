@@ -174,31 +174,16 @@ body {
 .article-content blockquote {
   background-color: #f5f5f5;
   border-left: 4px solid #d0d0d0;
-  padding: 1.5rem;
-  padding-bottom: .5rem;
+  padding: 0.5rem;
   margin: 1.5rem 0;
   font-style: italic;
   color: #555;
   position: relative;
   overflow: hidden;
 }
-/* オプション：引用符の追加 */
-.article-content blockquote::before {
-  content: "“";
-  font-size: 2rem;
-  color: #d0d0d0;
-  position: absolute;
-  top: -0.25rem;
-  left: 1rem;
-}
-
-.article-content blockquote::after {
-  content: "”";
-  font-size: 2rem;
-  color: #d0d0d0;
-  position: absolute;
-  bottom: -0.5rem;
-  right: 1rem;
+/* 引用ブロックのスタイル */
+.article-content blockquote p {
+  margin: 0;  
 }
 
 .article-content table {
@@ -213,6 +198,10 @@ body {
 
 .article-content table p{
   margin: 0;
+}
+
+.article-content a{
+  color: blue;
 }
 
 /* ヘッダー部分のスタイル */

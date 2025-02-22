@@ -47,10 +47,7 @@ export default function InstagramEmbed({ url }: InstagramEmbedProps) {
 
   return (
     <div className="">
-      <div className='text-center mb-2 text-sm text-gray-600'>
-        この記事はInstagramにも掲載されてるよ！
-      </div>
-      
+  
       <div key={key} className="my-6 mx-auto max-w-[540px] w-11/12 px-4 sm:px-0">
         <div className="relative overflow-hidden border-2 border-gray-800 rounded-2xl pb-[140%]">
           <div className="absolute top-0 left-0 w-full h-full">

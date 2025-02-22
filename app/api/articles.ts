@@ -9,14 +9,14 @@ import { client } from '../libs/microcms';
 export const CATEGORY_MAPPING = {
   '渡航前': 'preparation',
   '生活基本': 'lifestyle',
-  '観光': 'sightseeing',
-  '外食': 'dining',
+  // '観光': 'sightseeing',
+  // '外食': 'dining',
   '買い物': 'shopping',
-  '交通': 'transport',
-  '医療': 'healthcare',
-  '文化歴史': 'culture',
+  // '交通': 'transport',
+  // '医療': 'healthcare',
+  // '文化歴史': 'culture',
   'マネー': 'finance',
-  '英語学習': 'english',
+  // '英語学習': 'english',
   '留学哲学': 'mindset',
   'WASABI': 'wasabi'
 } as const;
