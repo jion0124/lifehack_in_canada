@@ -86,7 +86,7 @@ export default function RankingArticleCarousel() {
           }}
           className="w-full !px-5 !pb-8"
         >
-          <CarouselArrow isBeginning={isBeginning} isEnd={isEnd} />
+          <CarouselArrow isEnd={isEnd} />
           {articles.map((article, index) => (
             <SwiperSlide key={article.id} className="!flex items-start justify-center">
               <div className="w-full max-w-3xl">

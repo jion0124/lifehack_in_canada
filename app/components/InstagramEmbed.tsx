@@ -28,7 +28,6 @@ export default function InstagramEmbed({ url }: InstagramEmbedProps) {
       }
     };
 
-    // スクリプト読み込み済みかチェック
     if (window.instgrm) {
       processEmbed();
     } else {
@@ -39,7 +38,6 @@ export default function InstagramEmbed({ url }: InstagramEmbedProps) {
       document.body.appendChild(script);
     }
 
-    // クリーンアップ
     return () => {
       document.querySelectorAll('.instagram-media').forEach(el => el.remove());
     };
@@ -47,11 +45,9 @@ export default function InstagramEmbed({ url }: InstagramEmbedProps) {
 
   return (
     <div className="">
-  
       <div key={key} className="my-6 mx-auto max-w-[540px] w-11/12 px-4 sm:px-0">
         <div className="relative overflow-hidden border-2 border-gray-800 rounded-2xl pb-[140%]">
           <div className="absolute top-0 left-0 w-full h-full">
-            {/* Instagram公式スクリプト */}
             <Script
               src="https://www.instagram.com/embed.js"
               strategy="lazyOnload"
@@ -63,7 +59,6 @@ export default function InstagramEmbed({ url }: InstagramEmbedProps) {
               }}
             />
 
-            {/* Instagram埋め込み要素 */}
             <blockquote
               className="instagram-media h-full w-full rounded-2xl"
               data-instgrm-permalink={url}
@@ -78,18 +73,18 @@ export default function InstagramEmbed({ url }: InstagramEmbedProps) {
               }}
             />
 
-            {/* フォールバック表示 */}
             {!isLoaded && (
-              <div className="absolute inset-0 bg-gray-50 flex items-center justify-center p-4 animate-pulse">
-                <div className="text-center">
-                  <div className="text-gray-500 text-sm mb-2">
-                    Instagramを読み込んでいます...
+              <div className="absolute inset-0 bg-gray-50 flex items-center justify-center p-4">
+                <div className="text-center space-y-3">
+                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"/>
+                  <div className="text-gray-600 text-sm">
+                    Instagramの投稿を読み込んでいます...
                   </div>
                   <button
                     onClick={() => setKey(prev => prev + 1)}
-                    className="px-3 py-1.5 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                    className="px-4 py-2 text-sm bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors shadow-[1px_2px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none"
                   >
-                    再試行
+                    再読み込みする
                   </button>
                 </div>
               </div>

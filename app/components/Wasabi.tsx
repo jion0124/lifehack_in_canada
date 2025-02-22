@@ -104,7 +104,7 @@ export default function Wasabi() {
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={1}
-            slidesPerView={1.8}
+            slidesPerView={2}
             centeredSlides={true}
             loop={true}
             autoplay={{
@@ -182,13 +182,9 @@ export default function Wasabi() {
             }
           />
         </div> */}
+
+        <MoreButton href="https://www.instagram.com/wasabi_meetup/" text="WasabiのInstagramを見る" mt={6} targetBlank/>
       </div>
-          {/* <Mo// RelatedArticlesCard.tsx
-          type RelatedArticlesCardProps = {
-            currentArticleId: string
-            category: JapaneseCategory // 適切な型が使用されている
-            limit?: number
-          } */}
     </section>
   );
 }

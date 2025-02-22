@@ -32,7 +32,7 @@ export default function WriterCard({ writer }: { writer: Writer }) {
       {/* Header部分 */}
       <div className="flex items-center justify-center">
         {writer.image.url && (
-          <div className="relative w-[62px] h-[80px] mr-3">
+          <div className="relative w-[62px] h-[80px]">
             <Image
               src={writer.image.url}
               alt={writer.name}
@@ -45,7 +45,7 @@ export default function WriterCard({ writer }: { writer: Writer }) {
         {writer.tag?.map((tag, index) => (
               <div
                 key={index}
-                className="inline-block bg-gray-100 text-xs px-2 rounded-full mr-2"
+                className="inline-block bg-gray-100 text-xs px-2 rounded-full"
               >
                 {tag}
               </div>
@@ -102,7 +102,10 @@ export default function WriterCard({ writer }: { writer: Writer }) {
       </div>
 
       {/* 自己紹介文 */}
-      <div className="text-sm mb-4">{writer.intro}</div>
+      <div 
+        className="writer-intro text-sm mb-4"
+        dangerouslySetInnerHTML={{ __html: writer.intro || '' }}
+      />
 
       {/* ライターの他の記事へリンク （例）*/}
       <div className="mt-5 text-center">

@@ -66,7 +66,8 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
         overflow-x-auto 
         space-x-4 
         pb-3 
-        -mx-2
+        px-4
+        -mx-3
         scrollbar-none
         [-ms-overflow-style:none]
         [scrollbar-width:none]

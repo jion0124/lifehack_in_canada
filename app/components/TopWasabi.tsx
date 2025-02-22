@@ -182,13 +182,9 @@ export default function TopWasabi() {
             }
           />
         </div> */}
+
+          <MoreButton href="https://www.instagram.com/wasabi_meetup/" text="WasabiのInstagramを見る" mt={6} targetBlank/>
       </div>
-          {/* <Mo// RelatedArticlesCard.tsx
-          type RelatedArticlesCardProps = {
-            currentArticleId: string
-            category: JapaneseCategory // 適切な型が使用されている
-            limit?: number
-          } */}
     </section>
   );
 }

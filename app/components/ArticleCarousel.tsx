@@ -11,7 +11,7 @@ import 'swiper/css/pagination';
 import { CarouselArrow } from './CarouselArrow';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { convertCategory, Article } from '../api/articles';
-import { format } from 'date-fns'; // 追加
+import { format } from 'date-fns';
 import { Swiper as SwiperType } from 'swiper';
 
 interface ArticleCarouselProps {
@@ -22,7 +22,7 @@ export default function ArticleCarousel({ articles }: ArticleCarouselProps) {
   const swiperRef = useRef<SwiperType | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  const [mounted, setMounted] = useState(false); // 追加
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -53,7 +53,6 @@ export default function ArticleCarousel({ articles }: ArticleCarouselProps) {
         }}
         onSlideChange={updateNavigationState}
         navigation={{
-          prevEl: '.swiper-button-prev',
           nextEl: '.swiper-button-next'
         }}
         pagination={{ 
@@ -62,7 +61,6 @@ export default function ArticleCarousel({ articles }: ArticleCarouselProps) {
         className="w-full !px-5 !pb-8"
       >
         <CarouselArrow
-          isBeginning={isBeginning}
           isEnd={isEnd}
         />
         {articles.map((article) => (
@@ -95,7 +93,6 @@ export default function ArticleCarousel({ articles }: ArticleCarouselProps) {
                 <div className="flex flex-col flex-grow py-4 px-1 justify-between">
                   <div>
                     <p className="text-sm font-fugazOne">
-                      {/* 日付フォーマット修正 */}
                       {format(new Date(article.publishedAt), 'yyyy.MM.dd')}
                     </p>
                     <h3 className="text-xl line-clamp-2 my-2">

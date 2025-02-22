@@ -43,7 +43,7 @@ export default function Footer() {
       </div>
 
       {/* コピーライト表記 */}
-      <div className="text-center font-nosutaru text-white text-[12px] py-2 bg-[url('/images/copyright.png')]">
+      <div className="text-center text-white text-[12px] py-2 bg-[url('/images/copyright.png')]">
       ©カナダ生活事典  / ca_seikatsu 2025
       </div>
     </footer>

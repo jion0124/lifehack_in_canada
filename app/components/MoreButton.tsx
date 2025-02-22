@@ -28,6 +28,7 @@ export default function MoreButton({
           border-black 
           rounded-full 
           bg-white 
+          text-black
           shadow-[1px_2px_0px_0px_rgba(0,0,0,1)] 
           hover:translate-x-[1px] 
           hover:translate-y-[1px] 
