@@ -55,7 +55,7 @@ export function Banner() {
         </div>
       </div>
 
-      <div className="absolute bottom-14 left-4 z-1 aspect-square xs:bottom-11" 
+      <div className="absolute bottom-12 left-4 z-1 aspect-square xs:bottom-10" 
         style={{ width: '10%', height: '43px', minWidth: '170px' }}
       >
         <Image
