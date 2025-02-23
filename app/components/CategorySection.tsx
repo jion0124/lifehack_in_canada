@@ -22,9 +22,9 @@ export default function CategorySection() {
   return (
     <section className="relative my-8">
       {/* 背景用SVG画像 - 修正部分 */}
-      <div className="relative w-full" style={{ aspectRatio: '393/507' }}>
+      <div className="relative w-full" style={{ aspectRatio: '393/396' }}>
         <Image
-          src="/images/category_bg.svg"
+          src="/images/category_bg.png"
           alt="背景"
           fill
           className="object-contain"

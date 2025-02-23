@@ -15,21 +15,20 @@ export function Banner() {
     const handleScroll = () => {
       const { scrollWidth, scrollLeft, clientWidth } = scrollContainer;
       const isEnd = scrollWidth - (scrollLeft + clientWidth);
-
-      // 残りスクロール領域が 1px 以下なら末端と判定して矢印を隠す
-      if (isEnd <= 1) {
-        setShowArrow(false);
-      } else {
-        setShowArrow(true);
-      }
+      setShowArrow(isEnd > 1);
     };
 
     scrollContainer.addEventListener('scroll', handleScroll);
-    handleScroll(); // 初期表示時にも判定
+    handleScroll();
     return () => {
       scrollContainer.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  const images = [1, 2, 3, 4, 5].map(num => ({
+    src: `/images/top_image${num}.jpeg`,
+    alt: `カナダ生活バナー${num}`
+  }));
 
   return (
     <section className="relative w-full h-[400px] overflow-hidden">
@@ -38,54 +37,37 @@ export function Banner() {
         ref={scrollContainerRef}
         className="overflow-x-auto scrollbar-hide h-full"
       >
-        <div className="flex w-[300%] h-full">
-          <div className="relative w-1/3 h-full">
-            <Image
-              src="/images/top_image1.png"
-              alt="カナダ生活バナー1"
-              fill
-              className="object-cover"
-              unoptimized
-            />
-          </div>
-          <div className="relative w-1/3 h-full">
-            <Image
-              src="/images/top_image2.png"
-              alt="カナダ生活バナー2"
-              fill
-              className="object-cover"
-              unoptimized
-            />
-          </div>
-          <div className="relative w-1/3 h-full">
-            <Image
-              src="/images/top_image3.png"
-              alt="カナダ生活バナー3"
-              fill
-              className="object-cover"
-              unoptimized
-            />
-          </div>
+        <div className="flex h-full">
+          {images.map((image, index) => (
+            <div 
+              key={index} 
+              className="relative h-full min-w-full flex-shrink-0"
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* アイコン：背後の画像がスクロールしても動かない */}
-      <div 
-        className="absolute bottom-14 left-4 z-1 aspect-square xs:bottom-11" 
-        style={{ width: '10%', height: '43px', minWidth: '170px' }} 
+      <div className="absolute bottom-14 left-4 z-1 aspect-square xs:bottom-11" 
+        style={{ width: '10%', height: '43px', minWidth: '170px' }}
       >
         <Image
           src="/images/top_image_icon.png"
           alt="アイコン"
           width={500}
           height={500}
-          // ↓ style で幅 100%、高さ auto に
           style={{ width: '100%', height: 'auto' }}
           unoptimized
         />
       </div>
 
-      {/* 矢印：常に DOM に残し、opacity で出し分け → フェードアニメーション */}
       <div
         className={`
           absolute z-10 
