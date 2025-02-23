@@ -9,52 +9,40 @@ interface WolfMonologueProps {
 }
 
 export default function WolfMonologue({ text }: WolfMonologueProps) {
-  const [isExpanded, setIsExpanded] = useState(false); // 展開中かどうか
-  const [showButton, setShowButton] = useState(false); // ボタンを表示するか
-  const textRef = useRef<HTMLParagraphElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showButton, setShowButton] = useState(false);
+  const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const p = textRef.current;
-    if (!p) return;
+    const div = textRef.current;
+    if (!div) return;
 
-    // (1) 計測のためいったん .clamp-8 を外す
-    p.classList.remove('clamp-8');
+    div.classList.remove('clamp-8');
 
-    // (2) 行数を計測: scrollHeight / lineHeight
-    const style = window.getComputedStyle(p);
-    let lineHeight = parseFloat(style.lineHeight); 
+    const style = window.getComputedStyle(div);
+    let lineHeight = parseFloat(style.lineHeight);
     if (isNaN(lineHeight)) {
-      // line-height が normal 等の場合の簡易対処
-      lineHeight = 16; 
+      lineHeight = 16;
     }
-    const actualHeight = p.scrollHeight;
+    const actualHeight = div.scrollHeight;
     const lines = actualHeight / lineHeight;
 
-    // (3) 8行超えかどうか
     if (lines > 8) {
       setShowButton(true);
-      // 折りたたみ中（isExpanded=false）の場合は .clamp-8 を付ける
       if (!isExpanded) {
-        p.classList.add('clamp-8');
+        div.classList.add('clamp-8');
       }
     } else {
-      // 8行以下なら折りたたみ不要、ボタン非表示
       setShowButton(false);
     }
   }, [text, isExpanded]);
 
-
-
-  // ボタンクリック
   const handleToggleExpand = () => {
     setIsExpanded((prev) => !prev);
-    // 展開/折りたたみの切り替え
     if (textRef.current) {
       if (!isExpanded) {
-        // 折りたたみ中 → 全文表示へ
         textRef.current.classList.remove('clamp-8');
       } else {
-        // 全文表示中 → 折りたたみに戻す
         textRef.current.classList.add('clamp-8');
       }
     }
@@ -64,14 +52,12 @@ export default function WolfMonologue({ text }: WolfMonologueProps) {
     <div className="border border-black my-20 p-4 pb-8 bg-[#F5F5F5] relative mx-auto shadow-[1px_2px_0px_0px_rgba(0,0,0,1)]">
       <SectionTitle enTitle="MONOLOGUE" jaTitle="オオカミの独り言" />
 
-      <p
+      <div
         ref={textRef}
-        className="text-gray-800 text-sm mt-2 leading-relaxed"
-      >
-        {text}
-      </p>
+        className="text-gray-800 text-sm mt-2 leading-relaxed article-content"
+        dangerouslySetInnerHTML={{ __html: text }}
+      />
 
-      {/* 8行超時のみボタンを表示 */}
       {showButton && (
         <div className="mt-5 text-center">
           <button
