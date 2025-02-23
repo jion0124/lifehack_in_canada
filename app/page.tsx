@@ -18,7 +18,7 @@ export default async function HomePage() {
 
   return (
       <main >
-        <Banner />
+        {/* <Banner /> */}
         <TodayWolfQuote />
         <CategorySection />
 
