@@ -71,14 +71,16 @@ export function Banner() {
 
       {/* アイコン：背後の画像がスクロールしても動かない */}
       <div 
-        className="absolute -bottom-3 left-4 z-10 aspect-square xs:-bottom-5" 
-        style={{ width: '10%', minWidth: '170px' }} 
+        className="absolute bottom-14 left-4 z-1 aspect-square xs:bottom-11" 
+        style={{ width: '10%', height: '43px', minWidth: '170px' }} 
       >
         <Image
           src="/images/top_image_icon.png"
           alt="アイコン"
-          fill
-          className="object-contain" 
+          width={500}
+          height={500}
+          // ↓ style で幅 100%、高さ auto に
+          style={{ width: '100%', height: 'auto' }}
           unoptimized
         />
       </div>
