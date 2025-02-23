@@ -10,7 +10,8 @@ export default {
     extend: {
       screens: {
         'xxs': '370px', // 新たに370pxブレークポイントを追加
-        'xs': '480px',
+        'xs': '410px',
+        's': '420px',
         'sm': '640px',  // 以下は既定
       },
       colors: {

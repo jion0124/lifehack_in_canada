@@ -1,4 +1,3 @@
-import { FaFacebookF } from 'react-icons/fa'; // react-iconsを利用する場合
 import { FaXTwitter } from 'react-icons/fa6'; // X (Twitter) アイコン例
 import { RiLineFill } from 'react-icons/ri';  // LINEアイコン例
 

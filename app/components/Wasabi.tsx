@@ -104,7 +104,7 @@ export default function Wasabi() {
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={1}
-            slidesPerView={2}
+            slidesPerView={1.8}
             centeredSlides={true}
             loop={true}
             autoplay={{
