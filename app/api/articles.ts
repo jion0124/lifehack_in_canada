@@ -326,3 +326,15 @@ export const getActiveCategories = cache(async () => {
   
   return activeCategories;
 });
+
+// テスト用：現在の各カテゴリーの記事数をログ出力
+export const logCategoryArticleCounts = async () => {
+  const counts = await getCategoryArticleCounts();
+  console.log('=== カテゴリー別記事数 ===');
+  Object.entries(counts).forEach(([jaCategory, count]) => {
+    const enCategory = CATEGORY_MAPPING[jaCategory as JapaneseCategory];
+    console.log(`${jaCategory} (${enCategory}): ${count}件`);
+  });
+  console.log('========================');
+  return counts;
+};
