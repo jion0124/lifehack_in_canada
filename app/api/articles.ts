@@ -9,14 +9,14 @@ import { client } from '../libs/microcms';
 export const CATEGORY_MAPPING = {
   '渡航前': 'preparation',
   '生活基本': 'lifestyle',
-  // '観光': 'sightseeing',
-  // '外食': 'dining',
+  '観光': 'sightseeing',
+  '外食': 'dining',
   '買い物': 'shopping',
-  // '交通': 'transport',
-  // '医療': 'healthcare',
-  // '文化歴史': 'culture',  
+  '交通': 'transport',
+  '医療': 'healthcare',
+  '文化歴史': 'culture',  
   'マネー': 'finance',
-  // '英語学習': 'english',
+  '英語学習': 'english',
   '留学哲学': 'mindset',
   'WASABI': 'wasabi'
 } as const;
@@ -288,3 +288,41 @@ type SwipeRef = {
   isBeginning: boolean;
   isEnd: boolean;
 };
+
+/* ------------------------------------------------------------------
+ * カテゴリー別記事数取得関数
+ * ------------------------------------------------------------------ */
+export const getCategoryArticleCounts = cache(async () => {
+  const categoryCounts: Record<JapaneseCategory, number> = {} as Record<JapaneseCategory, number>;
+  
+  // 各カテゴリーの記事数を取得
+  for (const [jaCategory, enCategory] of Object.entries(CATEGORY_MAPPING)) {
+    try {
+      const data = await fetchWithCache('articles', {
+        fields: 'id',
+        filters: `category[contains]${jaCategory}`,
+        limit: 1, // 件数だけ知りたいので1件で十分
+      });
+      categoryCounts[jaCategory as JapaneseCategory] = data.totalCount;
+    } catch (error) {
+      console.error(`カテゴリー ${jaCategory} の記事数取得エラー:`, error);
+      categoryCounts[jaCategory as JapaneseCategory] = 0;
+    }
+  }
+  
+  return categoryCounts;
+});
+
+// 記事があるカテゴリーのみを取得
+export const getActiveCategories = cache(async () => {
+  const categoryCounts = await getCategoryArticleCounts();
+  const activeCategories: Record<JapaneseCategory, EnglishCategory> = {} as Record<JapaneseCategory, EnglishCategory>;
+  
+  for (const [jaCategory, count] of Object.entries(categoryCounts)) {
+    if (count > 0) {
+      activeCategories[jaCategory as JapaneseCategory] = CATEGORY_MAPPING[jaCategory as JapaneseCategory];
+    }
+  }
+  
+  return activeCategories;
+});

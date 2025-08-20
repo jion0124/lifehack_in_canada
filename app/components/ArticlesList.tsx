@@ -1,21 +1,52 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { Article, JapaneseCategory, EnglishCategory, CATEGORY_MAPPING, convertCategory } from '../api/articles';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import MoreButton from './MoreButton';
+import Image from 'next/image';
+import { Article, CATEGORY_MAPPING, getActiveCategories, JapaneseCategory, EnglishCategory, convertCategory } from '../api/articles';
 import { ArticleCard } from './ArticleCard';
 import SectionTitle from './SectionTitle';
+import MoreButton from './MoreButton';
 
 type Props = {
   articles: Article[];  // 全記事データを受け取る
 };
 
-const CATEGORIES = Object.keys(CATEGORY_MAPPING) as Array<keyof typeof CATEGORY_MAPPING>;
-
 const ArticlesList: React.FC<Props> = ({ articles }) => {
   const [selectedCategory, setSelectedCategory] = useState<EnglishCategory>('preparation');
+  const [activeCategories, setActiveCategories] = useState<Record<JapaneseCategory, EnglishCategory>>({} as Record<JapaneseCategory, EnglishCategory>);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchActiveCategories = async () => {
+      try {
+        const categories = await getActiveCategories();
+        setActiveCategories(categories);
+        // 最初のアクティブカテゴリーを選択状態にする
+        const firstCategory = Object.values(categories)[0];
+        if (firstCategory) {
+          setSelectedCategory(firstCategory);
+        }
+      } catch (error) {
+        console.error('アクティブカテゴリー取得エラー:', error);
+        // エラーの場合はデフォルトのカテゴリーを表示
+        const defaultCategories = {
+          '渡航前': 'preparation',
+          '生活基本': 'lifestyle',
+          '買い物': 'shopping',
+          'マネー': 'finance',
+          '留学哲学': 'mindset',
+          'WASABI': 'wasabi'
+        } as Record<JapaneseCategory, EnglishCategory>;
+        setActiveCategories(defaultCategories);
+        setSelectedCategory('preparation');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchActiveCategories();
+  }, []);
 
   const handleCategoryChange = (category: EnglishCategory) => {
     setSelectedCategory(category);
@@ -38,6 +69,17 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
   };
 
   const { path, text } = getMoreButtonInfo();
+
+  if (isLoading) {
+    return (
+      <div className="py-16 px-2 max-w-6xl mx-auto bg-white">
+        <SectionTitle enTitle="ALL" jaTitle="記事一覧" color="text-red-600" />
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>  
@@ -74,12 +116,12 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
         [&::-webkit-scrollbar]:hidden
       "
     >
-        {CATEGORIES.map((cat) => {
-          const isActive = selectedCategory === CATEGORY_MAPPING[cat];
+        {Object.entries(activeCategories).map(([jaCategory, enCategory]) => {
+          const isActive = selectedCategory === enCategory;
           return (
             <button
-              key={cat}
-              onClick={() => handleCategoryChange(CATEGORY_MAPPING[cat])}
+              key={jaCategory}
+              onClick={() => handleCategoryChange(enCategory)}
               className={`
                 flex-shrink-0 px-6 py-3 rounded-full font-medium
                 transition-colors duration-200 whitespace-nowrap
@@ -91,7 +133,7 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
                 }
               `}
             >
-              {cat}
+              {jaCategory}
             </button>
           );
         })}
@@ -112,18 +154,12 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
     </div>
 
       {/* もっと見るボタン追加部分 */}
-        <MoreButton href={path} text={text}/>
+      <div className="text-center">
+        <MoreButton href={path} text={text} />
+      </div>
+
     </div>
-    <div className="relative w-full h-20 z-10">
-          <Image
-            src="/images/all_articles_bottom.png"
-            alt="section top divider"
-            fill
-            className="object-contain object-top"
-            priority
-          />
-    </div>
-  </>
+    </>
   );
 };
 
