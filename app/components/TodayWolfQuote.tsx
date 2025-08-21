@@ -3,17 +3,17 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Article, convertCategory, getLatestWolfQuote } from '../api/articles';
+import { Article, convertCategory, getRandomWolfQuote } from '../api/articles';
 import MoreButton from './MoreButton';
 
 export default function TodayWolfQuote() {
-  const [latestArticle, setLatestArticle] = useState<Article | null>(null);
+  const [randomArticle, setRandomArticle] = useState<Article | null>(null);
 
   useEffect(() => {
     const fetchWolfQuote = async () => {
       try {
-        const article = await getLatestWolfQuote(); // 専用APIを呼び出し
-        setLatestArticle(article);
+        const article = await getRandomWolfQuote(); // ランダムAPIを呼び出し
+        setRandomArticle(article);
       } catch (error) {
         console.error('データ取得エラー:', error);
       }
@@ -41,8 +41,8 @@ export default function TodayWolfQuote() {
 
       {/* テキスト部分 */}
       <p className="text-sm leading-relaxed">
-        {latestArticle ? (
-          latestArticle.wolf_quote
+        {randomArticle ? (
+          randomArticle.wolf_quote
         ) : (
           <span className="block bg-gray-300 animate-pulse h-4 w-full rounded">
             読み込み中...
@@ -51,8 +51,8 @@ export default function TodayWolfQuote() {
       </p>
 
       {/* ボタン - APIから記事データが取得できた場合のみ表示 */}
-      {latestArticle && (
-        <MoreButton href={`/categories/${convertCategory.toEn(latestArticle.category)}/${latestArticle.id}`} text="記事を見る" />
+      {randomArticle && (
+        <MoreButton href={`/categories/${convertCategory.toEn(randomArticle.category)}/${randomArticle.id}`} text="記事を見る" />
       )}
     </section>
   );

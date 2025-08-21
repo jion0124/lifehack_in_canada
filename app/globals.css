@@ -180,9 +180,10 @@ body {
   position: relative;
   overflow: hidden;
 }
+
 /* 引用ブロックのスタイル */
 .article-content blockquote p {
-  margin: 0;  
+  margin: 0;
 }
 
 .article-content table {
@@ -195,11 +196,11 @@ body {
   border: 1px solid #ccc;
 }
 
-.article-content table p{
+.article-content table p {
   margin: 0;
 }
 
-.article-content a{
+.article-content a {
   color: blue;
 }
 
@@ -294,8 +295,6 @@ body {
   border-radius: 1rem !important;
 }
 
-.writer-intro  p{
+.writer-intro p {
   margin-bottom: 0.7rem;
 }
-
-

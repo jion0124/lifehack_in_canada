@@ -35,8 +35,17 @@ export function Banner() {
       {/* 横スクロールする画像群 */}
       <div 
         ref={scrollContainerRef}
-        className="overflow-x-auto scrollbar-hide h-full"
+        className="overflow-x-auto h-full"
+        style={{
+          scrollbarWidth: 'none', /* Firefox */
+          msOverflowStyle: 'none', /* IE and Edge */
+        }}
       >
+        <style jsx>{`
+          div::-webkit-scrollbar {
+            display: none; /* Chrome, Safari and Opera */
+          }
+        `}</style>
         <div className="flex h-full">
           {images.map((image, index) => (
             <div 

@@ -153,18 +153,28 @@ export const getAllArticles = cache(async () => {
   return data.contents as Article[];
 });
 
-// 記事詳細取得（関連3件も取得）
+// 記事詳細取得（関連記事も含めて最適化版）
 export const getArticleById = cache(async (id: string) => {
   try {
     const [article, related] = await Promise.all([
       fetchWithCache(`articles/${id}`, {
-        fields: 'id,category,title,tag,wolf_quote,content,wolf_monologue,instaPost,publishedAt,heroPhoto,updatedAt,writer'
+        fields: 'id,category,title,tag,wolf_quote,content,wolf_monologue,instaPost,publishedAt,heroPhoto,updatedAt,writer',
+        customRequestInit: {
+          next: {
+            revalidate: 60 * 30 // 30分キャッシュ
+          }
+        }
       }),
       fetchWithCache('articles', {
-        fields: 'id,title,publishedAt',
+        fields: 'id,title,publishedAt,heroPhoto,category',
         limit: 3,
         orders: '-publishedAt',
-        filters: `id[not_equals]${id}`
+        filters: `id[not_equals]${id}`,
+        customRequestInit: {
+          next: {
+            revalidate: 60 * 15 // 15分キャッシュ
+          }
+        }
       })
     ]);
 
@@ -180,7 +190,7 @@ export const getArticleById = cache(async (id: string) => {
 
 export type SortOrder = 'desc' | 'asc';
 
-// カテゴリで記事取得 + ページネーション
+// カテゴリで記事取得 + ページネーション（最適化版）
 export const getArticlesByCategory = cache(async (
   category: JapaneseCategory,
   sortOrder: SortOrder = 'desc',
@@ -193,7 +203,12 @@ export const getArticlesByCategory = cache(async (
     filters: `category[contains]${category}`, 
     orders: sortOrder === 'desc' ? '-publishedAt' : 'publishedAt',
     offset,
-    limit
+    limit,
+    customRequestInit: {
+      next: {
+        revalidate: 60 * 20 // 20分キャッシュ
+      }
+    }
   });
 
   return {
@@ -207,7 +222,7 @@ export const getArticlesByCategory = cache(async (
   };
 });
 
-// 新着記事取得
+// 新着記事取得（最適化版）
 export const getLatestArticles = cache(async () => {
   const data = await fetchWithCache('articles', {
     fields: 'id,title,publishedAt,heroPhoto,tag,updatedAt,category',
@@ -215,14 +230,14 @@ export const getLatestArticles = cache(async () => {
     orders: '-publishedAt',
     customRequestInit: {
       next: {
-        revalidate: 60 * 10 // 10分キャッシュ
+        revalidate: 60 * 5 // 5分キャッシュ（短縮）
       }
     }
   });
   return data.contents as Article[];
 });
 
-// app/api/articles.ts の修正
+// 関連記事取得（最適化版）
 export const getRelatedArticles = cache(async (
   currentArticleId: string,
   category: JapaneseCategory,
@@ -233,15 +248,25 @@ export const getRelatedArticles = cache(async (
     filters: `category[contains]${category}[and]id[not_equals]${currentArticleId}`,
     orders: '-publishedAt',
     limit,
+    customRequestInit: {
+      next: {
+        revalidate: 60 * 15 // 15分キャッシュ
+      }
+    }
   });
   return data.contents as Article[];
 });
 
 export const getAllCharacter = cache(async () => {
   const data = await fetchWithCache('character', {
-    fields: 'id,name,history,createdAt,image,intro,tag,ratings,button', // 必要なフィールドを指定
-    limit: 100, // 必要に応じて件数調整
-    orders: 'createdAt' // 作成日の降順など、適切な並び順を指定
+    fields: 'id,name,history,createdAt,image,intro,tag,ratings,button',
+    limit: 100,
+    orders: 'createdAt',
+    customRequestInit: {
+      next: {
+        revalidate: 60 * 60 // 1時間キャッシュ
+      }
+    }
   });
   return data.contents as Character[];
 });
@@ -259,6 +284,11 @@ export const getArticlesByWriter = cache(async (
     orders: sortOrder === 'desc' ? '-publishedAt' : 'publishedAt',
     offset,
     limit,
+    customRequestInit: {
+      next: {
+        revalidate: 60 * 20 // 20分キャッシュ
+      }
+    }
   });
   return {
     articles: data.contents as Article[],
@@ -283,6 +313,37 @@ export const getLatestWolfQuote = cache(async (): Promise<Article | null> => {
   }
 });
 
+// ランダムでオオカミ語録を取得
+export const getRandomWolfQuote = cache(async (): Promise<Article | null> => {
+  try {
+    // 直接MicroCMSからwolf_quoteがある記事を取得
+    const data = await fetchWithCache('articles', {
+      fields: 'id,category,title,wolf_quote,publishedAt',
+      filters: 'wolf_quote[exists]',
+      limit: 100, // 最大100件取得
+      orders: '-publishedAt',
+      customRequestInit: {
+        next: {
+          revalidate: 60 * 60 // 1時間キャッシュ
+        }
+      }
+    });
+    
+    const wolfQuoteArticles = data.contents as Article[];
+    
+    if (wolfQuoteArticles.length === 0) {
+      return null;
+    }
+    
+    // ランダム選択
+    const randomIndex = Math.floor(Math.random() * wolfQuoteArticles.length);
+    return wolfQuoteArticles[randomIndex];
+  } catch (error) {
+    console.error('ランダムオオカミ語録取得エラー:', error);
+    return null;
+  }
+});
+
 // any の代わりに型を指定
 type SwipeRef = {
   isBeginning: boolean;
@@ -290,27 +351,41 @@ type SwipeRef = {
 };
 
 /* ------------------------------------------------------------------
- * カテゴリー別記事数取得関数
+ * カテゴリー別記事数取得関数（最適化版）
  * ------------------------------------------------------------------ */
 export const getCategoryArticleCounts = cache(async () => {
-  const categoryCounts: Record<JapaneseCategory, number> = {} as Record<JapaneseCategory, number>;
-  
-  // 各カテゴリーの記事数を取得
-  for (const [jaCategory, enCategory] of Object.entries(CATEGORY_MAPPING)) {
-    try {
-      const data = await fetchWithCache('articles', {
-        fields: 'id',
-        filters: `category[contains]${jaCategory}`,
-        limit: 1, // 件数だけ知りたいので1件で十分
-      });
-      categoryCounts[jaCategory as JapaneseCategory] = data.totalCount;
-    } catch (error) {
-      console.error(`カテゴリー ${jaCategory} の記事数取得エラー:`, error);
+  try {
+    // 1回のAPI呼び出しで全記事を取得
+    const allArticles = await getAllArticles();
+    
+    // カテゴリー別に記事数をカウント
+    const categoryCounts: Record<JapaneseCategory, number> = {} as Record<JapaneseCategory, number>;
+    
+    // 初期化：全カテゴリーを0件で初期化
+    Object.keys(CATEGORY_MAPPING).forEach(jaCategory => {
       categoryCounts[jaCategory as JapaneseCategory] = 0;
-    }
+    });
+    
+    // 記事をカウント
+    allArticles.forEach(article => {
+      const category = article.category as JapaneseCategory;
+      if (category in categoryCounts) {
+        categoryCounts[category]++;
+      }
+    });
+    
+    return categoryCounts;
+  } catch (error) {
+    console.error('カテゴリー別記事数取得エラー:', error);
+    
+    // エラーの場合は空のオブジェクトを返す
+    const emptyCounts: Record<JapaneseCategory, number> = {} as Record<JapaneseCategory, number>;
+    Object.keys(CATEGORY_MAPPING).forEach(jaCategory => {
+      emptyCounts[jaCategory as JapaneseCategory] = 0;
+    });
+    
+    return emptyCounts;
   }
-  
-  return categoryCounts;
 });
 
 // 記事があるカテゴリーのみを取得

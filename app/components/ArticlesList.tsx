@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Article, CATEGORY_MAPPING, getActiveCategories, JapaneseCategory, EnglishCategory, convertCategory } from '../api/articles';
+import { Article, CATEGORY_MAPPING, JapaneseCategory, EnglishCategory, convertCategory } from '../api/articles';
 import { ArticleCard } from './ArticleCard';
 import SectionTitle from './SectionTitle';
 import MoreButton from './MoreButton';
@@ -14,72 +14,69 @@ type Props = {
 
 const ArticlesList: React.FC<Props> = ({ articles }) => {
   const [selectedCategory, setSelectedCategory] = useState<EnglishCategory>('preparation');
-  const [activeCategories, setActiveCategories] = useState<Record<JapaneseCategory, EnglishCategory>>({} as Record<JapaneseCategory, EnglishCategory>);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchActiveCategories = async () => {
-      try {
-        const categories = await getActiveCategories();
-        setActiveCategories(categories);
-        // 最初のアクティブカテゴリーを選択状態にする
-        const firstCategory = Object.values(categories)[0];
-        if (firstCategory) {
-          setSelectedCategory(firstCategory);
-        }
-      } catch (error) {
-        console.error('アクティブカテゴリー取得エラー:', error);
-        // エラーの場合はデフォルトのカテゴリーを表示
-        const defaultCategories = {
-          '渡航前': 'preparation',
-          '生活基本': 'lifestyle',
-          '買い物': 'shopping',
-          'マネー': 'finance',
-          '留学哲学': 'mindset',
-          'WASABI': 'wasabi'
-        } as Record<JapaneseCategory, EnglishCategory>;
-        setActiveCategories(defaultCategories);
-        setSelectedCategory('preparation');
-      } finally {
-        setIsLoading(false);
+  // カテゴリー別記事数をメモ化
+  const categoryCounts = useMemo(() => {
+    const counts: Record<JapaneseCategory, number> = {} as Record<JapaneseCategory, number>;
+    
+    // 初期化
+    Object.keys(CATEGORY_MAPPING).forEach(jaCategory => {
+      counts[jaCategory as JapaneseCategory] = 0;
+    });
+    
+    // 記事をカウント
+    articles.forEach(article => {
+      const category = article.category as JapaneseCategory;
+      if (category in counts) {
+        counts[category]++;
       }
-    };
+    });
+    
+    return counts;
+  }, [articles]);
 
-    fetchActiveCategories();
+  // アクティブカテゴリーをメモ化
+  const activeCategories = useMemo(() => {
+    const active: Record<JapaneseCategory, EnglishCategory> = {} as Record<JapaneseCategory, EnglishCategory>;
+    Object.entries(categoryCounts).forEach(([jaCategory, count]) => {
+      if (count > 0) {
+        active[jaCategory as JapaneseCategory] = CATEGORY_MAPPING[jaCategory as JapaneseCategory];
+      }
+    });
+    return active;
+  }, [categoryCounts]);
+
+  // 最初のアクティブカテゴリーを選択状態にする
+  useEffect(() => {
+    const firstCategory = Object.values(activeCategories)[0];
+    if (firstCategory) {
+      setSelectedCategory(firstCategory);
+    }
+  }, [activeCategories]);
+
+  // フィルタリングされた記事をメモ化
+  const filteredArticles = useMemo(() => {
+    return articles
+      .filter(article => {
+        const categoryEn = CATEGORY_MAPPING[article.category as keyof typeof CATEGORY_MAPPING];
+        return categoryEn === selectedCategory;
+      })
+      .slice(0, 5); // 最大5件に制限
+  }, [articles, selectedCategory]);
+
+  // カテゴリー変更ハンドラーをメモ化
+  const handleCategoryChange = useCallback((category: EnglishCategory) => {
+    setSelectedCategory(category);
   }, []);
 
-  const handleCategoryChange = (category: EnglishCategory) => {
-    setSelectedCategory(category);
-  };
-
-  const filteredArticles = articles
-    .filter(article => {
-      const categoryEn = CATEGORY_MAPPING[article.category as keyof typeof CATEGORY_MAPPING];
-      return categoryEn === selectedCategory;
-    })
-    .slice(0, 5); // 最大5件に制限
-
-  // もっと見るボタンの情報を生成
-  const getMoreButtonInfo = () => {    
+  // もっと見るボタンの情報をメモ化
+  const moreButtonInfo = useMemo(() => {
     const jpCategory = Object.entries(CATEGORY_MAPPING).find(([_, value]) => value === selectedCategory)?.[0];
     return {
       path: `/categories/${selectedCategory}`,
       text: `${jpCategory}の記事をもっとみる`
     };
-  };
-
-  const { path, text } = getMoreButtonInfo();
-
-  if (isLoading) {
-    return (
-      <div className="py-16 px-2 max-w-6xl mx-auto bg-white">
-        <SectionTitle enTitle="ALL" jaTitle="記事一覧" color="text-red-600" />
-        <div className="flex justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-        </div>
-      </div>
-    );
-  }
+  }, [selectedCategory]);
 
   return (
     <>  
@@ -139,25 +136,36 @@ const ArticlesList: React.FC<Props> = ({ articles }) => {
         })}
       </div>
 
-    {/* 記事リストコンテナ */}
-    <div className="max-w-4xl mx-auto mb-10 shadow-md">
-      <div className="">
-        {filteredArticles.map((article) => (
-          <Link 
-          key={article.id}
-          href={`/categories/${convertCategory.toEn(article.category as JapaneseCategory)}/${article.id}`}
-        >
-          <ArticleCard article={article} />
-        </Link>
-        ))}
-      </div>
-    </div>
+        {/* 記事リストコンテナ */}
+        <div className="max-w-4xl mx-auto mb-10">
+          <div className="space-y-6">
+            {filteredArticles.map((article, index) => (
+              <div key={article.id}>
+                <Link 
+                  href={`/categories/${convertCategory.toEn(article.category as JapaneseCategory)}/${article.id}`}
+                >
+                  <ArticleCard article={article} />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
 
       {/* もっと見るボタン追加部分 */}
       <div className="text-center">
-        <MoreButton href={path} text={text} />
+        <MoreButton href={moreButtonInfo.path} text={moreButtonInfo.text} />
       </div>
+    </div>
 
+    {/* 下の区切り線 - 画面幅100% */}
+    <div className="relative w-full h-20 z-10">
+      <Image
+        src="/images/all_articles_bottom.png"
+        alt="section bottom divider"
+        fill
+        className="object-contain object-top"
+        priority
+      />
     </div>
     </>
   );
