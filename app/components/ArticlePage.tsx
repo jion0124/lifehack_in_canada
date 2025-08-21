@@ -1,10 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import { Article,convertCategory,getLatestArticles } from '../api/articles';
+import { Article, convertCategory } from '../api/articles';
 import WolfQuote from './WolfQuote';
-import { useEffect, useState } from 'react';
-import '../globals.css';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import WolfMonologue from './WolfMonologue';
 import parse from 'html-react-parser';
 import React from 'react';
@@ -147,7 +146,7 @@ export default function ArticlePage({ article }: ArticlePageProps) {
   }, [article.content]);
 
   // 目次クリックでスムーススクロール
-  const scrollToHeading = (id: string) => (e: React.MouseEvent) => {
+  const scrollToHeading = useCallback((id: string) => (e: React.MouseEvent) => {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
@@ -158,33 +157,17 @@ export default function ArticlePage({ article }: ArticlePageProps) {
         behavior: 'smooth'
       });
     }
-  };
+  }, []);
 
   // 1) HTMLをパース
   const parsedContent = parse(content);
   
-  // 2) 連続<figure>をまとめてスライダー化
-  const mergedContent = mergeConsecutiveFigures(parsedContent, (images) => {
-    return <InlineSlider images={images} />;
-  });
-
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // 最新記事取ってくる
-  useEffect(() => {
-    const fetchLatest = async () => {
-      try {
-        const data = await getLatestArticles();
-        setArticles(data);
-      } catch (error) {
-        console.error('Error fetching latest articles:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchLatest();
-  }, []);
+  // 2) 連続<figure>をまとめてスライダー化（useMemoで最適化）
+  const mergedContent = useMemo(() => {
+    return mergeConsecutiveFigures(parsedContent, (images) => {
+      return <InlineSlider images={images} />;
+    });
+  }, [parsedContent]);
 
   return (
     <article className="bg-white max-w-screen-sm mx-auto px-3 pt-[52px]">

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { convertCategory, getRelatedArticles, Article, JapaneseCategory } from '../api/articles'
 import { ArticleCard } from './ArticleCard'
 import SectionTitle from './SectionTitle'
@@ -20,20 +20,26 @@ export const RelatedArticlesCard: React.FC<RelatedArticlesCardProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [articles, setArticles] = useState<Article[]>([]);
 
-  useEffect(() => {
-    const fetchRelated = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getRelatedArticles(currentArticleId, category, limit);
-        setArticles(data);
-      } catch (error) {
-        console.error('Error fetching related articles:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchRelated();
+  const fetchRelated = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await getRelatedArticles(currentArticleId, category, limit);
+      setArticles(data);
+    } catch (error) {
+      console.error('Error fetching related articles:', error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [currentArticleId, category, limit]);
+
+  useEffect(() => {
+    fetchRelated();
+  }, [fetchRelated]);
+
+  // 関連記事がない場合は何も表示しない
+  if (!isLoading && articles.length === 0) {
+    return null;
+  }
 
   return (
     <>

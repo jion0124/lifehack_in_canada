@@ -90,6 +90,43 @@ body {
   grid-template-columns: repeat(3, auto);
 }
 
+/* カテゴリ数に応じた列数調整 */
+.category_grid_4 {
+  grid-template-columns: repeat(3, auto);
+}
+
+.category_grid_5 {
+  grid-template-columns: repeat(3, auto);
+}
+
+.category_grid_6 {
+  grid-template-columns: repeat(3, auto);
+}
+
+.category_grid_7 {
+  grid-template-columns: repeat(4, auto);
+}
+
+.category_grid_8 {
+  grid-template-columns: repeat(4, auto);
+}
+
+.category_grid_9 {
+  grid-template-columns: repeat(4, auto);
+}
+
+.category_grid_10 {
+  grid-template-columns: repeat(4, auto);
+}
+
+.category_grid_11 {
+  grid-template-columns: repeat(4, auto);
+}
+
+.category_grid_12 {
+  grid-template-columns: repeat(4, auto);
+}
+
 .swiper-button-prev,
 .swiper-button-next {
   &::after {

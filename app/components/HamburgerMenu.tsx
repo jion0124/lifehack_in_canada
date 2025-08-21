@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Bars3Icon as MenuIcon,
   XMarkIcon as XIcon,
 } from '@heroicons/react/24/outline';
-import { CATEGORY_MAPPING, JapaneseCategory } from '../api/articles';
+import { CATEGORY_MAPPING, JapaneseCategory, getActiveCategories } from '../api/articles';
 import { convertCategory } from '../api/articles';
 
 // メニュー項目を「日本語」「英語」併記に変更
@@ -21,6 +21,24 @@ export default function HamburgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
   // カテゴリー展開用の状態
   const [isCategoryExpanded, setIsCategoryExpanded] = useState(false);
+  // アクティブなカテゴリーを管理
+  const [activeCategories, setActiveCategories] = useState<Record<JapaneseCategory, string>>({});
+
+  // アクティブなカテゴリーを取得
+  useEffect(() => {
+    const fetchActiveCategories = async () => {
+      try {
+        const categories = await getActiveCategories();
+        setActiveCategories(categories);
+      } catch (error) {
+        console.error('アクティブカテゴリー取得エラー:', error);
+        // エラーの場合は空のオブジェクトを設定
+        setActiveCategories({});
+      }
+    };
+
+    fetchActiveCategories();
+  }, []);
 
   return (
     <div>
@@ -81,19 +99,25 @@ export default function HamburgerMenu() {
                     className={`grid grid-cols-2 gap-y-6 transition-all duration-300 ease-in-out overflow-hidden ${isCategoryExpanded ? 'py-8 pl-12' : 'py-0 pl-12'}`}
                     style={{ maxHeight: isCategoryExpanded ? '1000px' : '0px' }}
                   >
-                    {Object.keys(CATEGORY_MAPPING).map((cat) => (
-                      <Link 
-                        key={cat} 
-                        href={`/categories/${convertCategory.toEn(cat as JapaneseCategory)}`}
-                        onClick={() => {
-                          setIsCategoryExpanded(false);
-                          setIsOpen(false);
-                        }}
-                        className="block hover:underline"
-                      >
-                        {cat}
-                      </Link>
-                    ))}
+                    {Object.keys(activeCategories).length > 0 ? (
+                      Object.keys(activeCategories).map((cat) => (
+                        <Link 
+                          key={cat} 
+                          href={`/categories/${convertCategory.toEn(cat as JapaneseCategory)}`}
+                          onClick={() => {
+                            setIsCategoryExpanded(false);
+                            setIsOpen(false);
+                          }}
+                          className="block hover:underline"
+                        >
+                          {cat}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="col-span-2 text-gray-500 text-sm">
+                        記事がありません
+                      </div>
+                    )}
                   </div>
                 </li>
               );

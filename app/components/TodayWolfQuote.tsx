@@ -1,7 +1,7 @@
 // TodayWolfQuote.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import { Article, convertCategory, getRandomWolfQuote } from '../api/articles';
 import MoreButton from './MoreButton';
@@ -9,17 +9,18 @@ import MoreButton from './MoreButton';
 export default function TodayWolfQuote() {
   const [randomArticle, setRandomArticle] = useState<Article | null>(null);
 
-  useEffect(() => {
-    const fetchWolfQuote = async () => {
-      try {
-        const article = await getRandomWolfQuote(); // ランダムAPIを呼び出し
-        setRandomArticle(article);
-      } catch (error) {
-        console.error('データ取得エラー:', error);
-      }
-    };
-    fetchWolfQuote();
+  const fetchWolfQuote = useCallback(async () => {
+    try {
+      const article = await getRandomWolfQuote();
+      setRandomArticle(article);
+    } catch (error) {
+      console.error('データ取得エラー:', error);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchWolfQuote();
+  }, [fetchWolfQuote]);
 
   return (
     <section className="relative w-10/12 max-w-md mx-auto my-8 border border-gray-800 shadow-[1px_2px_0px_0px_rgba(0,0,0,1)] bg-white bg-opacity-90 p-4">

@@ -3,7 +3,7 @@ import ArticlesList from './components/ArticlesList';
 import CategorySection from './components/CategorySection';
 import { Banner } from './components/Banner';
 import TopWasabi from './components/TopWasabi';
-import RankingArticlesCarousel from './components/RankingArticlesCarousel';
+import FeaturedArticleCarousel from './components/FeaturedArticleCarousel';
 import TodayWolfQuote from './components/TodayWolfQuote';
 import { Others } from './components/Others';
 import LatestArticlesCarousel from './components/LatestArticlesCarousel';
@@ -18,7 +18,7 @@ export default async function Home() {
       <CategorySection />
       <LatestArticlesCarousel />
       <ArticlesList articles={allArticles} />
-      <RankingArticlesCarousel />
+      <FeaturedArticleCarousel />
       <TopWasabi />
       <Others />
     </main>

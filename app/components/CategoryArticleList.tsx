@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Article, getArticlesByCategory, SortOrder, EnglishCategory,JapaneseCategory } from '../api/articles';
 import { ArticleCard } from './ArticleCard';
 import SectionTitle from './SectionTitle';
@@ -22,11 +22,11 @@ export function CategoryArticleList({ jaCategoryName, enCategoryName }: Category
   const [isLoading, setIsLoading] = useState(false);
   const ITEMS_PER_PAGE = 30;
 
-  const fetchArticles = async (page: number, order: SortOrder) => {
+  const fetchArticles = useCallback(async (page: number, order: SortOrder) => {
     setIsLoading(true);
     try {
       const { articles: newArticles, totalCount } = await getArticlesByCategory(
-        jaCategoryName, // 修正箇所
+        jaCategoryName,
         order,
         page,
         ITEMS_PER_PAGE
@@ -36,24 +36,24 @@ export function CategoryArticleList({ jaCategoryName, enCategoryName }: Category
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [jaCategoryName]);
 
   useEffect(() => {
     fetchArticles(currentPage, sortOrder);
-  }, [jaCategoryName, currentPage, sortOrder]);
+  }, [fetchArticles, currentPage, sortOrder]);
 
-  const handleSortChange = async (newOrder: SortOrder) => {
+  const handleSortChange = useCallback(async (newOrder: SortOrder) => {
     setSortOrder(newOrder);
     setCurrentPage(1);
     await fetchArticles(1, newOrder);
-  };
+  }, [fetchArticles]);
 
-  const handlePageChange = (direction: 'prev' | 'next') => {
+  const handlePageChange = useCallback((direction: 'prev' | 'next') => {
     const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
-  };
+  }, [currentPage, totalPages]);
 
   return (
     <div className="pt-16">

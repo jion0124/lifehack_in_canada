@@ -5,13 +5,14 @@ import React from 'react'
 import { convertCategory, getLatestArticles, Article } from '../api/articles'
 import { ArticleCard } from './ArticleCard'
 import SectionTitle from './SectionTitle'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export const LatestArticlesCard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [articles, setArticles] = useState<Article[]>([]);
+  
   useEffect(() => {
-    const fetchLatest = async () => {
+    const fetchLatest = useCallback(async () => {
       try {
         const data = await getLatestArticles();
         setArticles(data);
@@ -20,7 +21,8 @@ export const LatestArticlesCard = () => {
       } finally {
         setIsLoading(false);
       }
-    };
+    }, []);
+
     fetchLatest();
   }, []);
   return (

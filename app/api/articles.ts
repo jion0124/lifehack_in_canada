@@ -344,6 +344,35 @@ export const getRandomWolfQuote = cache(async (): Promise<Article | null> => {
   }
 });
 
+// おすすめ記事（featured）を取得
+export const getFeaturedArticles = cache(async (limit: number = 5) => {
+  try {
+    const data = await client.get({
+      endpoint: 'featured',
+      queries: {
+        fields: 'id,featured,featured.id,featured.title,featured.publishedAt,featured.heroPhoto,featured.tag,featured.category',
+        limit
+      }
+    });
+    
+    // featured APIのレスポンス構造に合わせて処理
+    if (data.contents && data.contents.length > 0) {
+      const featuredContent = data.contents[0];
+      
+      if (featuredContent.featured && Array.isArray(featuredContent.featured)) {
+        // limitに達していない場合は、実際の記事数を返す
+        const articles = featuredContent.featured.slice(0, limit);
+        return articles as Article[];
+      }
+    }
+    
+    return [];
+  } catch (error) {
+    console.error('おすすめ記事取得エラー:', error);
+    return [];
+  }
+});
+
 // any の代わりに型を指定
 type SwipeRef = {
   isBeginning: boolean;

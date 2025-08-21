@@ -1,7 +1,6 @@
 'use client'; // クライアントコンポーネント化が必要
 
 import MoreButton from "./MoreButton";
-import InstagramSlider from "./InstagramSlider"; // 前回作成したスライダーコンポーネント
 import SectionTitle from "./SectionTitle";
 import InstagramEmbed from "./InstagramEmbed";
 

@@ -10,22 +10,13 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { CarouselArrow } from './CarouselArrow';
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { convertCategory, Article, getArticleById } from '../api/articles';
+import { convertCategory, Article, getFeaturedArticles } from '../api/articles';
 import { format } from 'date-fns';
 import SectionTitle from './SectionTitle';
 import MoreButton from './MoreButton';
 import { Swiper as SwiperType } from 'swiper';
 
-// 表示したい記事のID配列
-const RANKING_ARTICLE_IDS = [
-  "J7UsoiopC",  // キノコの記事のID
-  "wxyZeG3f1a2i",  // 幸せについての記事のID
-  "igqO78YnRRl",  // カナダの州についての記事のID
-  "bU4R1vG1RS",  // Shakepayについての記事のID
-  "AJ3uifhk7"   // ポイ活の記事のID
-];
-
-export default function RankingArticleCarousel() {
+export default function FeaturedArticleCarousel() {
   const swiperRef = useRef<SwiperType | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -33,23 +24,17 @@ export default function RankingArticleCarousel() {
   const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
-    const fetchRankingArticles = async () => {
+    const fetchFeaturedArticles = async () => {
       try {
-        const articlePromises = RANKING_ARTICLE_IDS.map(id => getArticleById(id));
-        const fetchedArticles = await Promise.all(articlePromises);
-        // getArticleByIdの戻り値から記事データのみを抽出
-        const articlesData = fetchedArticles.map(result => ({
-          ...result,
-          relatedArticles: undefined // 関連記事は不要なので除外
-        }));
-        setArticles(articlesData);
+        const featuredArticles = await getFeaturedArticles(5);
+        setArticles(featuredArticles);
         setMounted(true);
       } catch (error) {
-        console.error('ランキング記事の取得に失敗しました:', error);
+        console.error('おすすめ記事の取得に失敗しました:', error);
       }
     };
 
-    fetchRankingArticles();
+    fetchFeaturedArticles();
   }, []);
 
   const updateNavigationState = useCallback(() => {
@@ -59,11 +44,13 @@ export default function RankingArticleCarousel() {
     }
   }, []);
 
-  if (!mounted || articles.length === 0) return null;
+  if (!mounted || articles.length === 0) {
+    return null;
+  }
 
   return (
     <>
-      <SectionTitle enTitle="RANKING" jaTitle="週間ランキング" color="text-red-600" />
+      <SectionTitle enTitle="FEATURED" jaTitle="おすすめ記事ランキング" color="text-red-600" />
       <div className="relative flex flex-col gap-8 mt-8">
         <Swiper
           modules={[Navigation, Pagination]}

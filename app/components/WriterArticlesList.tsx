@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Article, convertCategory, getArticlesByWriter, SortOrder } from '../api/articles';
 import { ArticleCard } from './ArticleCard';
 import SectionTitle from './SectionTitle';
@@ -14,13 +14,13 @@ interface WriterArticlesListProps {
 
 export function WriterArticlesList({ writerId }: WriterArticlesListProps) {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [articles, setArticles] = useState<Article[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const ITEMS_PER_PAGE = 5;
+  const [articles, setArticles] = useState<Article[]>([]);
+  const ITEMS_PER_PAGE = 30;
 
-  const fetchArticles = async (page: number, order: SortOrder) => {
+  const fetchArticles = useCallback(async (page: number, order: SortOrder) => {
     setIsLoading(true);
     try {
       const { articles: newArticles, totalCount } = await getArticlesByWriter(
@@ -34,24 +34,24 @@ export function WriterArticlesList({ writerId }: WriterArticlesListProps) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [writerId]);
 
   useEffect(() => {
     fetchArticles(currentPage, sortOrder);
-  }, [writerId, currentPage, sortOrder]);
+  }, [fetchArticles, currentPage, sortOrder]);
 
-  const handleSortChange = async (newOrder: SortOrder) => {
+  const handleSortChange = useCallback(async (newOrder: SortOrder) => {
     setSortOrder(newOrder);
     setCurrentPage(1);
     await fetchArticles(1, newOrder);
-  };
+  }, [fetchArticles]);
 
-  const handlePageChange = (direction: 'prev' | 'next') => {
+  const handlePageChange = useCallback((direction: 'prev' | 'next') => {
     const newPage = direction === 'next' ? currentPage + 1 : currentPage - 1;
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
-  };
+  }, [currentPage, totalPages]);
 
   // articles が存在すれば最初の記事の最初のライターの名前を使用し、なければ writerId をフォールバックとして利用
   const writerName =
