@@ -17,15 +17,13 @@ const nextConfig = {
   },
   // パフォーマンス最適化
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
     optimizePackageImports: ['@heroicons/react'],
   },
   // 圧縮設定
   compress: true,
   // 静的ファイルの最適化
   poweredByHeader: false,
-  // レスポンシブ画像の最適化
-  swcMinify: true,
 };
 
 module.exports = nextConfig;
